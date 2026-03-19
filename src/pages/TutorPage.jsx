@@ -38,29 +38,17 @@ export default function TutorPage() {
     setLoading(true)
 
     try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/.netlify/functions/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: `You are Legacy Tutor, an AI tutor for Liberian students preparing for the WASSCE (West African Senior School Certificate Examination). The student is studying ${subject}.
-
-Guidelines:
-- Explain topics clearly and simply, as if talking to a West African secondary school student
-- Use simple English — avoid overly technical language unless explaining a technical term
-- Give examples relevant to everyday life in West Africa and Liberia when helpful
-- For math and science, show step-by-step working
-- Keep answers focused and not too long (under 300 words unless a complex topic needs more)
-- Be warm, encouraging, and supportive
-- Align answers with the WAEC syllabus for ${subject}
-- If asked something outside WASSCE subjects, gently redirect to exam topics`,
+          subject,
           messages: history.filter(m => m.role !== 'system'),
         })
       })
 
       const data = await res.json()
-      const reply = data.content?.[0]?.text || 'I am sorry, I could not process that. Please try again.'
+      const reply = data.content || 'I am sorry, I could not process that. Please try again.'
       setMessages([...history, { role: 'assistant', content: reply }])
     } catch {
       setMessages([...history, { role: 'assistant', content: 'I am having trouble connecting right now. Please check your internet and try again.' }])
@@ -148,3 +136,4 @@ Guidelines:
     </div>
   )
 }
+
