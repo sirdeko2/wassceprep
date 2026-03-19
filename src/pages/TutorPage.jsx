@@ -50,8 +50,8 @@ export default function TutorPage() {
       const data = await res.json()
       const reply = data.content || 'I am sorry, I could not process that. Please try again.'
       setMessages([...history, { role: 'assistant', content: reply }])
-    } catch {
-      setMessages([...history, { role: 'assistant', content: 'I am having trouble connecting right now. Please check your internet and try again.' }])
+    } catch (err) {
+      setMessages([...history, { role: 'assistant', content: 'Error: ' + err.message }])
     }
 
     setLoading(false)
@@ -72,7 +72,6 @@ export default function TutorPage() {
           </p>
         </div>
 
-        {/* Chat container */}
         <div className="tutor-header">
           <div className="tutor-avatar">🎓</div>
           <div>
@@ -136,4 +135,3 @@ export default function TutorPage() {
     </div>
   )
 }
-
