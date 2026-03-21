@@ -2,17 +2,18 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { isSupabaseConfigured } from '@/lib/supabase'
 
-import LandingPage   from '@/pages/LandingPage'
-import LoginPage     from '@/pages/LoginPage'
-import RegisterPage  from '@/pages/RegisterPage'
-import DashboardPage from '@/pages/DashboardPage'
-import SubjectsPage  from '@/pages/SubjectsPage'
-import QuizPage      from '@/pages/QuizPage'
-import ResultsPage   from '@/pages/ResultsPage'
-import TutorPage     from '@/pages/TutorPage'
-import ProgressPage  from '@/pages/ProgressPage'
-import NotFoundPage  from '@/pages/NotFoundPage'
-import AdminPage     from '@/pages/AdminPage'
+import LandingPage        from '@/pages/LandingPage'
+import LoginPage          from '@/pages/LoginPage'
+import RegisterPage       from '@/pages/RegisterPage'
+import DashboardPage      from '@/pages/DashboardPage'
+import SubjectsPage       from '@/pages/SubjectsPage'
+import QuizPage           from '@/pages/QuizPage'
+import ResultsPage        from '@/pages/ResultsPage'
+import TutorPage          from '@/pages/TutorPage'
+import ProgressPage       from '@/pages/ProgressPage'
+import NotFoundPage       from '@/pages/NotFoundPage'
+import AdminPage          from '@/pages/AdminPage'
+import ResetPasswordPage  from '@/pages/ResetPasswordPage'
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -37,17 +38,18 @@ export default function App() {
     <>
       <SetupBanner />
       <Routes>
-        <Route path="/"              element={<LandingPage />} />
-        <Route path="/login"         element={<LoginPage />} />
-        <Route path="/register"      element={<RegisterPage />} />
-        <Route path="/dashboard"     element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
-        <Route path="/subjects"      element={<PrivateRoute><SubjectsPage /></PrivateRoute>} />
-        <Route path="/quiz/:subject" element={<PrivateRoute><QuizPage /></PrivateRoute>} />
-        <Route path="/results"       element={<PrivateRoute><ResultsPage /></PrivateRoute>} />
-        <Route path="/tutor"         element={<PrivateRoute><TutorPage /></PrivateRoute>} />
-        <Route path="/progress"      element={<PrivateRoute><ProgressPage /></PrivateRoute>} />
-        <Route path="/admin"         element={<PrivateRoute><AdminPage /></PrivateRoute>} />
-        <Route path="*"              element={<NotFoundPage />} />
+        <Route path="/"               element={<LandingPage />} />
+        <Route path="/login"          element={<LoginPage />} />
+        <Route path="/register"       element={<RegisterPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/dashboard"      element={<PrivateRoute><DashboardPage /></PrivateRoute>} />
+        <Route path="/subjects"       element={<PrivateRoute><SubjectsPage /></PrivateRoute>} />
+        <Route path="/quiz/:subject"  element={<PrivateRoute><QuizPage /></PrivateRoute>} />
+        <Route path="/results"        element={<PrivateRoute><ResultsPage /></PrivateRoute>} />
+        <Route path="/tutor"          element={<PrivateRoute><TutorPage /></PrivateRoute>} />
+        <Route path="/progress"       element={<PrivateRoute><ProgressPage /></PrivateRoute>} />
+        <Route path="/admin"          element={<PrivateRoute><AdminPage /></PrivateRoute>} />
+        <Route path="*"               element={<NotFoundPage />} />
       </Routes>
     </>
   )
