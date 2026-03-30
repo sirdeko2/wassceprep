@@ -6,7 +6,7 @@
 -- Run after migrations 001–006
 -- ============================================================
 
-INSERT INTO questions (subject, paper_number, question_type, topic, year, question_text, options, correct_answer_index, explanation, difficulty, marks, is_active) VALUES
+INSERT INTO questions (subject, paper_number, question_type, topic, year, question_text, options, correct_answer_index, explanation, difficulty, marks) VALUES
 
 -- ── STRESS PATTERNS ──────────────────────────────────────────────────────────
 ('English Language',3,'mcq','Word Stress',2022,
@@ -169,7 +169,7 @@ INSERT INTO questions (subject, paper_number, question_type, topic, year, questi
 -- ── PHONETIC SYMBOLS ──────────────────────────────────────────────────────────
 ('English Language',3,'mcq','Phonetic Symbols',2022,
 'What does the phonetic symbol /ə/ represent?',
-'["A long "a" sound","The schwa — an unstressed mid-central vowel","A silent letter marker","The "th" sound"]',
+'["A long vowel sound (like in cake)","The schwa — an unstressed mid-central vowel","A silent letter marker","The th sound"]',
 1,
 'The schwa /ə/ is the most common vowel sound in English. It appears in unstressed syllables: "ago" /əˈɡoʊ/, "sofa" /ˈsoʊfə/.',
 'medium',1),

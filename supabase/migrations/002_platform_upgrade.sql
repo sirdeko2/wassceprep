@@ -242,7 +242,7 @@ INSERT INTO questions (subject, topic, year, question_text, options, correct_ans
 ('Biology', 'Nutrition', 2022,
  'Which nutrient is the main source of energy in the body?',
  '["Proteins", "Fats", "Carbohydrates", "Vitamins"]', 2,
- 'Carbohydrates are the body\'s preferred and most immediate source of energy, broken down to glucose.', 'easy'),
+ 'Carbohydrates are the body''s preferred and most immediate source of energy, broken down to glucose.', 'easy'),
 
 ('Biology', 'Human Biology', 2020,
  'The organ responsible for filtering blood and producing urine is the:',
@@ -368,8 +368,8 @@ INSERT INTO questions (subject, topic, year, question_text, options, correct_ans
 
 ('Physics', 'Mechanics', 2021,
  'The principle that states "the pressure applied to a fluid in a closed container is transmitted equally in all directions" is:',
- '["Archimedes\' Principle", "Pascal\'s Principle", "Bernoulli\'s Principle", "Boyle\'s Law"]', 1,
- 'Pascal\'s Principle: pressure applied to a fluid is transmitted undiminished throughout the fluid.', 'hard'),
+ '["Archimedes'' Principle", "Pascal''s Principle", "Bernoulli''s Principle", "Boyle''s Law"]', 1,
+ 'Pascal''s Principle: pressure applied to a fluid is transmitted undiminished throughout the fluid.', 'hard'),
 
 ('Physics', 'Energy', 2022,
  'Which form of energy does a moving car possess?',
@@ -393,9 +393,9 @@ INSERT INTO questions (subject, topic, year, question_text, options, correct_ans
  'The law of demand: there is an inverse relationship between price and quantity demanded, all other things being equal.', 'easy'),
 
 ('Economics', 'International Trade', 2020,
- 'Liberia\'s main export commodity has historically been:',
+ 'Liberia''s main export commodity has historically been:',
  '["Cocoa", "Coffee", "Iron ore and rubber", "Palm oil only"]', 2,
- 'Liberia\'s major exports have historically been iron ore and natural rubber (from rubber plantations like Firestone).', 'medium'),
+ 'Liberia''s major exports have historically been iron ore and natural rubber (from rubber plantations like Firestone).', 'medium'),
 
 ('Economics', 'Public Finance', 2021,
  'A progressive tax system means:',
@@ -476,7 +476,7 @@ INSERT INTO questions (subject, topic, year, question_text, options, correct_ans
 ('Geography', 'Climate', 2019,
  'Liberia has a tropical climate mainly because it:',
  '["Is in the Southern Hemisphere", "Is located near the equator", "Is surrounded by mountains", "Has a cold ocean current"]', 1,
- 'Liberia\'s proximity to the equator means it receives intense solar radiation year-round, resulting in a hot, humid tropical climate with distinct rainy and dry seasons.', 'easy'),
+ 'Liberia''s proximity to the equator means it receives intense solar radiation year-round, resulting in a hot, humid tropical climate with distinct rainy and dry seasons.', 'easy'),
 
 ('Geography', 'Physical Geography', 2022,
  'An ox-bow lake forms when:',
@@ -497,10 +497,10 @@ INSERT INTO questions (subject, topic, year, question_text, options, correct_ans
 ('Literature', 'Poetry', 2022,
  'A poem that tells a story, often with heroes and adventures, is called an:',
  '["Elegy", "Ode", "Sonnet", "Epic"]', 3,
- 'An epic is a long narrative poem that tells the story of heroic deeds and adventures, often on a grand scale. Examples: Homer\'s Iliad, Odyssey.', 'medium'),
+ 'An epic is a long narrative poem that tells the story of heroic deeds and adventures, often on a grand scale. Examples: Homer''s Iliad, Odyssey.', 'medium'),
 
 ('Literature', 'African Literature', 2020,
- 'In Chinua Achebe\'s "Things Fall Apart", the protagonist is:',
+ 'In Chinua Achebe''s "Things Fall Apart", the protagonist is:',
  '["Nwoye", "Okonkwo", "Ezinma", "Obierika"]', 1,
  'Okonkwo is the protagonist of "Things Fall Apart" — a proud Igbo warrior whose life is the central focus of the novel.', 'easy'),
 
