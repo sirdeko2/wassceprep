@@ -1,36 +1,94 @@
 import { useState, useRef, useEffect } from 'react'
 import Navbar from '@/components/layout/Navbar'
 import { useAuth } from '@/context/AuthContext'
-import { SUBJECT_NAMES } from '@/data/subjects'
+import { SUBJECTS } from '@/data/subjects'
+import { supabase } from '@/lib/supabase'
+
+const SUBJECT_NAMES = SUBJECTS.map(s => s.name)
+const RATE_LIMIT = 10
+const WINDOW_HOURS = 8
 
 const SUGGESTIONS = [
   'Explain photosynthesis step by step',
   'What is opportunity cost?',
   'How do I solve a quadratic equation?',
-  'Types of rocks in geography',
-  'Explain Newton\'s three laws of motion',
+  'What causes rainfall in West Africa?',
+  "Explain Newton's three laws of motion",
   'What is the difference between a simile and a metaphor?',
 ]
 
 export default function TutorPage() {
   const { user, profile } = useAuth()
-  const [subject,  setSubject]  = useState('Mathematics')
+  const [subject, setSubject]   = useState('Mathematics')
   const [messages, setMessages] = useState([{
     role: 'assistant',
     content: 'Hello! I am your Legacy Tutor. I can help you understand any WASSCE topic across all 8 subjects.\n\nSelect your subject above and ask me anything — whether it is a concept you find confusing, a past question explained, or a topic you need to revise. What would you like to learn today?'
   }])
-  const [input,    setInput]    = useState('')
-  const [loading,  setLoading]  = useState(false)
+  const [input, setInput]       = useState('')
+  const [loading, setLoading]   = useState(false)
+  const [usage, setUsage]       = useState({ count: 0, resetAt: null })
   const chatRef = useRef(null)
 
   useEffect(() => {
     if (chatRef.current) chatRef.current.scrollTop = chatRef.current.scrollHeight
   }, [messages])
 
+  useEffect(() => {
+    if (user) checkUsage()
+  }, [user])
+
+  async function checkUsage() {
+    const windowStart = new Date(Date.now() - WINDOW_HOURS * 60 * 60 * 1000).toISOString()
+    const { data } = await supabase
+      .from('ai_tutor_usage')
+      .select('created_at')
+      .eq('user_id', user.id)
+      .gte('created_at', windowStart)
+      .order('created_at', { ascending: true })
+
+    if (!data) return
+    const count = data.length
+    const resetAt = count > 0
+      ? new Date(new Date(data[0].created_at).getTime() + WINDOW_HOURS * 60 * 60 * 1000)
+      : null
+    setUsage({ count, resetAt })
+  }
+
+  function formatResetTime(date) {
+    if (!date) return ''
+    const diff = date - Date.now()
+    if (diff <= 0) return 'now'
+    const h = Math.floor(diff / 3600000)
+    const m = Math.floor((diff % 3600000) / 60000)
+    return h > 0 ? `${h}h ${m}m` : `${m}m`
+  }
+
+  const isLimited = usage.count >= RATE_LIMIT
+
   async function sendMessage(text) {
     const msg = text || input.trim()
-    if (!msg || loading) return
+    if (!msg || loading || isLimited) return
     setInput('')
+
+    if (user) {
+      const windowStart = new Date(Date.now() - WINDOW_HOURS * 60 * 60 * 1000).toISOString()
+      const { count } = await supabase
+        .from('ai_tutor_usage')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gte('created_at', windowStart)
+
+      if (count >= RATE_LIMIT) {
+        await checkUsage()
+        return
+      }
+
+      await supabase.from('ai_tutor_usage').insert({
+        user_id: user.id,
+        question_text: msg,
+        subject,
+      })
+    }
 
     const userMsg = { role: 'user', content: msg }
     const history = [...messages, userMsg]
@@ -43,21 +101,30 @@ export default function TutorPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           subject,
+          userId: user?.id || null,
           messages: history.filter(m => m.role !== 'system'),
         })
       })
-
       const data = await res.json()
-      const reply = data.content || 'I am sorry, I could not process that. Please try again.'
+      // Handle server-side rate limit response
+      if (res.status === 429) {
+        await checkUsage()
+        setMessages([...history, { role: 'assistant', content: data.message || 'Rate limit reached. Please try again later.' }])
+        setLoading(false)
+        return
+      }
+      const reply = data.content || 'I could not process that. Please try again.'
       setMessages([...history, { role: 'assistant', content: reply }])
     } catch (err) {
-      setMessages([...history, { role: 'assistant', content: 'Error: ' + err.message }])
+      setMessages([...history, { role: 'assistant', content: 'Network error: ' + err.message }])
     }
 
     setLoading(false)
+    if (user) checkUsage()
   }
 
   const initial = (profile?.full_name || user?.email || 'S')[0].toUpperCase()
+  const remaining = Math.max(0, RATE_LIMIT - usage.count)
 
   return (
     <div className="page-wrapper">
@@ -71,6 +138,29 @@ export default function TutorPage() {
             Ask any WASSCE question and get a clear explanation instantly.
           </p>
         </div>
+
+        {user && (
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            background: isLimited ? 'var(--red-light)' : 'var(--blue-light)',
+            border: `1px solid ${isLimited ? 'var(--red)' : 'var(--blue-mid)'}`,
+            borderRadius: 10, padding: '10px 16px', marginBottom: 12, flexWrap: 'wrap', gap: 8
+          }}>
+            <span style={{ fontSize: 13, color: isLimited ? 'var(--red)' : 'var(--blue)', fontWeight: 600 }}>
+              {isLimited
+                ? `⛔ Limit reached — ${RATE_LIMIT} questions used. Resets in ${formatResetTime(usage.resetAt)}`
+                : `💬 ${remaining} of ${RATE_LIMIT} questions remaining${usage.resetAt ? ` — resets in ${formatResetTime(usage.resetAt)}` : ''}`}
+            </span>
+            <div style={{ display: 'flex', gap: 4 }}>
+              {Array.from({ length: RATE_LIMIT }).map((_, i) => (
+                <div key={i} style={{
+                  width: 8, height: 8, borderRadius: '50%',
+                  background: i < usage.count ? (isLimited ? 'var(--red)' : 'var(--blue)') : 'var(--gray-200)'
+                }} />
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="tutor-header">
           <div className="tutor-avatar">🎓</div>
@@ -115,22 +205,24 @@ export default function TutorPage() {
         <div className="chat-input-row">
           <input
             className="chat-input"
-            placeholder="Ask a question about any WASSCE topic..."
+            placeholder={isLimited ? 'Daily limit reached. Come back later.' : 'Ask a question about any WASSCE topic...'}
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && sendMessage()}
-            disabled={loading}
+            disabled={loading || isLimited}
           />
-          <button className="chat-send-btn" onClick={() => sendMessage()} disabled={loading || !input.trim()}>
+          <button className="chat-send-btn" onClick={() => sendMessage()} disabled={loading || !input.trim() || isLimited}>
             ➤
           </button>
         </div>
 
-        <div className="tutor-suggestions">
-          {SUGGESTIONS.map((s, i) => (
-            <button key={i} className="suggestion-chip" onClick={() => sendMessage(s)}>{s}</button>
-          ))}
-        </div>
+        {!isLimited && (
+          <div className="tutor-suggestions">
+            {SUGGESTIONS.map((s, i) => (
+              <button key={i} className="suggestion-chip" onClick={() => sendMessage(s)}>{s}</button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

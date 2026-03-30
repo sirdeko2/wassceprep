@@ -1,18 +1,22 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 
-export default function Navbar({ variant = 'public' }) {
+export default function Navbar() {
   const { user, profile, signOut } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
 
   async function handleLogout() {
     await signOut()
     navigate('/')
   }
 
+  function isActive(path) {
+    return location.pathname.startsWith(path)
+  }
+
   return (
     <nav className="navbar">
-      {/* Logo */}
       <Link to={user ? '/dashboard' : '/'} className="nav-logo">
         <div className="nav-logo-icon">LT</div>
         <div>
@@ -21,23 +25,21 @@ export default function Navbar({ variant = 'public' }) {
         </div>
       </Link>
 
-      {/* Center nav links */}
       <div className="nav-center">
-        <Link to="/subjects" className="nav-center-btn">
-          <span>📝</span> Past Paper Practice
+        <Link to="/subjects" className={`nav-center-btn${isActive('/subjects') || isActive('/quiz') ? ' nav-center-btn--active' : ''}`}>
+          <span>⏱️</span> Mock &amp; Practice
         </Link>
-        <Link to="/subjects?mode=mock" className="nav-center-btn">
-          <span>⏱️</span> Timed Mock Exams
-        </Link>
-        <Link to="/tutor" className="nav-center-btn">
+        <Link to="/tutor" className={`nav-center-btn${isActive('/tutor') ? ' nav-center-btn--active' : ''}`}>
           <span>🤖</span> AI Tutor
         </Link>
-        <Link to={user ? '/progress' : '/register'} className="nav-center-btn">
+        <Link to="/past-papers" className={`nav-center-btn${isActive('/past-papers') ? ' nav-center-btn--active' : ''}`}>
+          <span>📄</span> Past Papers
+        </Link>
+        <Link to={user ? '/progress' : '/register'} className={`nav-center-btn${isActive('/progress') ? ' nav-center-btn--active' : ''}`}>
           <span>📊</span> Progress Tracking
         </Link>
       </div>
 
-      {/* Right side */}
       <div className="nav-right">
         {user ? (
           <div className="nav-user">
@@ -51,7 +53,7 @@ export default function Navbar({ variant = 'public' }) {
           </div>
         ) : (
           <div className="nav-links">
-            <Link to="/login"    className="nav-btn nav-btn-ghost">Log In</Link>
+            <Link to="/login" className="nav-btn nav-btn-ghost">Log In</Link>
             <Link to="/register" className="nav-btn nav-btn-primary">Get Started Free</Link>
           </div>
         )}

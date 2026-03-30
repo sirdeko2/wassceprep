@@ -70,7 +70,7 @@ export default function LandingPage() {
       {/* FEATURES */}
       <section style={{ padding: '80px 24px', maxWidth: 1100, margin: '0 auto' }}>
         <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 3, textTransform: 'uppercase', color: 'var(--red)', marginBottom: 12 }}>
-          Why Legacy Tech WASSCEPrep
+          Why WASSCEPrep
         </div>
         <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 'clamp(28px, 4vw, 42px)', color: 'var(--blue)', marginBottom: 12 }}>
           Everything you need to pass first time
@@ -80,7 +80,7 @@ export default function LandingPage() {
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
           {[
-            { icon: '📝', color: 'var(--blue-light)', title: 'Past Paper Practice', desc: 'Real WASSCE questions from previous years with instant answer feedback and detailed explanations so you understand, not just memorize.', link: '/subjects' },
+            { icon: '📝', color: 'var(--blue-light)', title: 'Mock & Practice Exams', desc: 'Real WASSCE questions from previous years with instant answer feedback and detailed explanations so you understand, not just memorize.', link: '/subjects' },
             { icon: '⏱️', color: 'var(--red-light)', title: 'Timed Mock Exams', desc: 'Simulate the real exam experience with countdown timers. Build speed and confidence before the actual exam day arrives.', link: '/subjects' },
             { icon: '🤖', color: 'var(--green-light)', title: 'AI Tutor', desc: 'Ask any question about any subject and get clear, simple explanations instantly — like having a personal teacher available 24/7.', link: '/tutor' },
             { icon: '📊', color: 'var(--orange-light)', title: 'Progress Tracking', desc: 'See your scores, identify weak areas, and track improvement over time. Know exactly where to focus your study sessions.', link: '/register' },
@@ -146,7 +146,7 @@ export default function LandingPage() {
 
       {/* FOOTER */}
       <footer style={{ background: 'var(--gray-800)', color: 'rgba(255,255,255,0.5)', textAlign: 'center', padding: 24, fontSize: 13 }}>
-        <p>© 2025 <span style={{ color: 'var(--gold)' }}>Legacy Tech WASSCEPrep</span> — Free WASSCE prep for every Liberian student 🇱🇷</p>
+        <p>© 2026 <span style={{ color: 'var(--gold)' }}>WASSCEPrep</span> — Free WASSCE prep for every Liberian student 🇱🇷</p>
       </footer>
     </div>
   )

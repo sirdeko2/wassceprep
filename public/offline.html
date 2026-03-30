@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline — WASSCEPrep</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #f1f3f7;
+      font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+      padding: 24px;
+      text-align: center;
+    }
+    .icon { font-size: 72px; margin-bottom: 20px; }
+    h1 {
+      font-size: 26px;
+      color: #002868;
+      margin-bottom: 12px;
+      font-family: Georgia, serif;
+    }
+    p { color: #6b7280; font-size: 15px; max-width: 340px; line-height: 1.6; margin-bottom: 28px; }
+    .tip {
+      background: #e8edf8;
+      border-radius: 12px;
+      padding: 16px 20px;
+      max-width: 360px;
+      font-size: 14px;
+      color: #002868;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    .tip strong { display: block; margin-bottom: 6px; }
+    button {
+      background: #002868;
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+  </style>
+</head>
+<body>
+  <div class="icon">📡</div>
+  <h1>You're Offline</h1>
+  <p>
+    No internet connection found. If you've already loaded WASSCEPrep before, your
+    cached questions are still available — open the app to keep studying.
+  </p>
+  <div class="tip">
+    <strong>💡 Tip for studying offline:</strong>
+    Open a subject and start a Practice session — any questions loaded on your last
+    visit will work without internet. Your results will sync when you reconnect.
+  </div>
+  <button onclick="window.location.href='/'">Try Again →</button>
+</body>
+</html>

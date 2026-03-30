@@ -1,9 +1,17 @@
 [build]
-  command = "npm run build"
-  publish = "dist"
+  command   = "npm run build"
+  publish   = "dist"
   functions = "netlify/functions"
 
+[functions]
+  # Bundle each function with its dependencies
+  node_bundler = "esbuild"
+
+# Netlify functions take priority over the SPA catch-all below,
+# so no special redirect needed for /.netlify/functions/*
+
+# SPA fallback — must come LAST so it doesn't swallow function routes
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from   = "/*"
+  to     = "/index.html"
   status = 200

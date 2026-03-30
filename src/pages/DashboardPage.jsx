@@ -2,11 +2,13 @@ import { Link } from 'react-router-dom'
 import Navbar from '@/components/layout/Navbar'
 import { useAuth } from '@/context/AuthContext'
 import { useProgress } from '@/hooks/useData'
+import { useSubscription } from '@/hooks/useSubscription'
 import { SUBJECTS } from '@/data/subjects'
 
 export default function DashboardPage() {
   const { profile, user } = useAuth()
   const { progress, loading } = useProgress()
+  const { hasFullAccess, isPaid } = useSubscription()
   const name = profile?.full_name || user?.email?.split('@')[0] || 'Student'
 
   return (
@@ -14,14 +16,19 @@ export default function DashboardPage() {
       <Navbar />
       <div className="dashboard-layout">
 
-        {/* Sidebar */}
         <aside className="sidebar">
           <div className="sidebar-section">
             <div className="sidebar-label">Main</div>
-            <Link to="/dashboard"     className="sidebar-item active"><span>🏠</span> Dashboard</Link>
-            <Link to="/subjects"      className="sidebar-item"><span>📝</span> Practice <span className="sidebar-badge">8</span></Link>
-            <Link to="/tutor"         className="sidebar-item"><span>🤖</span> AI Tutor</Link>
-            <Link to="/progress"      className="sidebar-item"><span>📊</span> Progress</Link>
+            <Link to="/dashboard"  className="sidebar-item active"><span>🏠</span> Dashboard</Link>
+            <Link to="/subjects"   className="sidebar-item"><span>⏱️</span> Mock &amp; Practice <span className="sidebar-badge">8</span></Link>
+            <Link to="/tutor"      className="sidebar-item"><span>🤖</span> AI Tutor</Link>
+            <Link to="/past-papers" className="sidebar-item"><span>📄</span> Past Papers</Link>
+            <Link to="/progress"   className="sidebar-item"><span>📊</span> Progress</Link>
+            {!isPaid && (
+              <Link to="/upgrade" className="sidebar-item" style={{ color: 'var(--gold)', fontWeight: 700 }}>
+                <span>⭐</span> Upgrade to Full Access
+              </Link>
+            )}
           </div>
           <div className="sidebar-section">
             <div className="sidebar-label">Subjects</div>
@@ -33,9 +40,19 @@ export default function DashboardPage() {
           </div>
         </aside>
 
-        {/* Main content */}
         <main className="main-content">
-          {/* Welcome banner */}
+          {!hasFullAccess && (
+            <div className="upgrade-banner" style={{ marginBottom: 20 }}>
+              <div style={{ fontSize: 24 }}>⭐</div>
+              <div className="upgrade-banner-text">
+                <strong>Unlock full access</strong> — Unlimited questions, mock exams with AI marking, all subjects &amp; analytics for just $5/month.
+              </div>
+              <Link to="/upgrade">
+                <button className="upgrade-banner-btn">Upgrade Now</button>
+              </Link>
+            </div>
+          )}
+
           <div className="welcome-banner">
             <div>
               <div className="welcome-title">Welcome back, {name} 👋</div>
@@ -47,7 +64,6 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Stats */}
           <div className="stats-row">
             <div className="stat-card">
               <div className="stat-card-label">Questions Done</div>
@@ -83,7 +99,6 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Subject cards */}
           <div className="cards-title">
             Continue Studying <Link to="/subjects">View all →</Link>
           </div>
@@ -109,7 +124,6 @@ export default function DashboardPage() {
             })}
           </div>
 
-          {/* Recent activity */}
           <div className="cards-title">Recent Activity</div>
           <div className="activity-list">
             {loading ? (
