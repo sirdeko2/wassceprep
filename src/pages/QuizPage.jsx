@@ -518,6 +518,31 @@ export default function QuizPage() {
     </div>
   )
 
+  // Empty state — no questions found in the database for this subject/paper
+  if (phase === 'quiz' && questions.length === 0) {
+    return (
+      <div className="page-wrapper"><Navbar />
+        <div className="quiz-layout" style={{ textAlign: 'center', paddingTop: 60 }}>
+          <div style={{ fontSize: 64, marginBottom: 16 }}>🏗️</div>
+          <h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: 26, color: 'var(--blue)', marginBottom: 12 }}>
+            Questions Coming Soon
+          </h2>
+          <p style={{ color: 'var(--gray-600)', maxWidth: 440, margin: '0 auto 8px', lineHeight: 1.7 }}>
+            We're still building the question bank for <strong>{subjectName}</strong>{' '}
+            {currentPaper ? `Paper ${currentPaper.number}` : ''}. Check back soon — our content team is adding new questions every week.
+          </p>
+          <p style={{ color: 'var(--gray-400)', maxWidth: 420, margin: '0 auto 24px', fontSize: 13, lineHeight: 1.6 }}>
+            In the meantime, try a different subject or ask the AI Tutor for help on this topic.
+          </p>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button className="btn-quiz btn-quiz-outline" onClick={() => navigate('/subjects')}>← Other Subjects</button>
+            <button className="btn-quiz btn-quiz-primary" onClick={() => navigate('/tutor')}>🤖 Ask AI Tutor</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   // Results screen
   if (phase === 'results') {
     const mcqEntries = Object.entries(paperScores).filter(([,v]) => !v.essay)

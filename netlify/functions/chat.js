@@ -24,6 +24,33 @@ exports.handler = async (event) => {
   try {
     const { messages, subject, userId } = JSON.parse(event.body)
 
+    // ── Content moderation — keep the tutor on-topic ───────────────────────
+    // Reject clearly off-topic requests before spending API credits.
+    // The last user message is checked against a blocklist of patterns that
+    // have nothing to do with secondary-school academics.
+    const lastUserContent = [...(messages || [])]
+      .reverse()
+      .find(m => m.role === 'user')?.content || ''
+
+    const OFF_TOPIC_PATTERNS = [
+      /\b(generate|write|create)\s+(code|script|program|malware|exploit|hack)\b/i,
+      /\b(password|credit.?card|bank.?account|social.?security)\b/i,
+      /\b(how\s+to\s+(make|build|create)\s+(bomb|weapon|drug|explosive))\b/i,
+      /\b(porn|explicit|sexual)\b/i,
+      /\b(stock.?pick|invest\s+in|crypto.?trade|forex.?signal)\b/i,
+    ]
+
+    const isOffTopic = OFF_TOPIC_PATTERNS.some(rx => rx.test(lastUserContent))
+    if (isOffTopic) {
+      return {
+        statusCode: 200,
+        headers: CORS,
+        body: JSON.stringify({
+          content: "I'm Legacy Tutor and I can only help with WASSCE subjects like Mathematics, English, Sciences, Economics, and Literature. Please ask me a question related to your studies! 📚",
+        }),
+      }
+    }
+
     // ── Server-side rate limit check ───────────────────────────────────
     // The spec requires server-side enforcement BEFORE calling the Claude API.
     // Rolling 8-hour window: max 10 questions per user.

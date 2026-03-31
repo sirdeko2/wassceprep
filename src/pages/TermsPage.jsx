@@ -135,7 +135,7 @@ export default function TermsPage() {
           <ul style={s.ul}>
             <li style={s.li}><strong>Account information</strong> — your name, email address, and county (provided at registration).</li>
             <li style={s.li}><strong>Usage data</strong> — quiz scores, subjects studied, mock exam attempts, and AI tutor interactions. This helps us personalise your progress dashboard.</li>
-            <li style={s.li}><strong>Payment information</strong> — if you subscribe, your mobile money transaction is handled by <strong>Flutterwave</strong>. WASSCEPrep never stores your mobile money number or PIN.</li>
+            <li style={s.li}><strong>Payment information</strong> — if you subscribe, your payment is processed via <strong>MTN Mobile Money</strong>. WASSCEPrep never stores your mobile money PIN or full account details.</li>
             <li style={s.li}><strong>Technical data</strong> — device type, browser, and general usage analytics used to improve the platform. We do not use advertising trackers.</li>
           </ul>
 
@@ -156,7 +156,7 @@ export default function TermsPage() {
           <ul style={s.ul}>
             <li style={s.li}><strong>Supabase</strong> — secure cloud database and authentication. Your data is stored on servers that comply with GDPR standards.</li>
             <li style={s.li}><strong>Anthropic Claude AI</strong> — powers the AI Tutor and essay feedback. Your questions are sent to Anthropic's API but are not used to train AI models.</li>
-            <li style={s.li}><strong>Flutterwave</strong> — processes mobile money payments. Subject to Flutterwave's own privacy policy.</li>
+            <li style={s.li}><strong>MTN Mobile Money</strong> — processes subscription payments. Subject to MTN's own privacy policy.</li>
             <li style={s.li}><strong>Netlify</strong> — hosts the platform. Subject to Netlify's privacy policy.</li>
           </ul>
 
