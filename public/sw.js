@@ -11,7 +11,7 @@
  * the quiz engine can load them even without any network at all.
  */
 
-const CACHE_VERSION = 'v1'
+const CACHE_VERSION = 'v2'
 const SHELL_CACHE   = `wassce-shell-${CACHE_VERSION}`
 const DATA_CACHE    = `wassce-data-${CACHE_VERSION}`
 
@@ -63,20 +63,21 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
-  // Navigation requests (HTML pages) — cache first with network update
+  // Navigation requests (HTML pages) — network first so new deployments
+  // are always picked up; fall back to cache only when offline
   if (request.mode === 'navigate') {
     event.respondWith(
-      caches.match(request)
-        .then(cached => {
-          const networkFetch = fetch(request).then(response => {
-            if (response.ok) {
-              caches.open(SHELL_CACHE).then(c => c.put(request, response.clone()))
-            }
-            return response
-          })
-          return cached || networkFetch
+      fetch(request)
+        .then(response => {
+          if (response.ok) {
+            caches.open(SHELL_CACHE).then(c => c.put(request, response.clone()))
+          }
+          return response
         })
-        .catch(() => caches.match('/offline.html'))
+        .catch(() =>
+          caches.match(request)
+            .then(cached => cached || caches.match('/offline.html'))
+        )
     )
     return
   }

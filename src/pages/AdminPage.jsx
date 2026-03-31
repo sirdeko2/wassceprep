@@ -335,10 +335,10 @@ export default function AdminPage() {
       topic: q.topic || '',
       year: q.year || new Date().getFullYear(),
       question_text: q.question_text,
-      option_a: q.options[0] || '',
-      option_b: q.options[1] || '',
-      option_c: q.options[2] || '',
-      option_d: q.options[3] || '',
+      option_a: q.options?.[0] || '',
+      option_b: q.options?.[1] || '',
+      option_c: q.options?.[2] || '',
+      option_d: q.options?.[3] || '',
       correct_answer_index: q.correct_answer_index,
       explanation: q.explanation || '',
       difficulty: q.difficulty || 'medium',
@@ -383,7 +383,7 @@ export default function AdminPage() {
   const filtered = questions.filter(q => {
     const matchSubject = filterSubj === 'All' || q.subject === filterSubj
     const matchSearch = !search ||
-      q.question_text.toLowerCase().includes(search.toLowerCase()) ||
+      q.question_text?.toLowerCase().includes(search.toLowerCase()) ||
       q.topic?.toLowerCase().includes(search.toLowerCase())
     return matchSubject && matchSearch
   })
@@ -537,7 +537,7 @@ export default function AdminPage() {
                         {q.topic && <span>📌 {q.topic}</span>}
                         {q.year && <span>📅 {q.year}</span>}
                         <span style={{ background: q.difficulty === 'easy' ? '#e8f5e9' : q.difficulty === 'hard' ? '#f5e6ea' : '#fff3e0', color: q.difficulty === 'easy' ? '#2E7D32' : q.difficulty === 'hard' ? '#BF0A30' : '#E65100', padding: '2px 8px', borderRadius: 100, fontWeight: 600, textTransform: 'capitalize' }}>{q.difficulty}</span>
-                        <span style={{ color: '#2E7D32', fontWeight: 600 }}>✓ {LETTERS[q.correct_answer_index]}: {q.options[q.correct_answer_index]}</span>
+                        <span style={{ color: '#2E7D32', fontWeight: 600 }}>✓ {LETTERS[q.correct_answer_index]}: {q.options?.[q.correct_answer_index]}</span>
                       </div>
                     </div>
                     <div style={s.qActions}>
