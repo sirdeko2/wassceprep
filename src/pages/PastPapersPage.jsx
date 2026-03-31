@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '@/components/layout/Navbar'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
@@ -10,6 +10,7 @@ const PAPERS = ['All Papers', 'Paper 1', 'Paper 2', 'Paper 3']
 
 export default function PastPapersPage() {
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [papers, setPapers]         = useState([])
   const [loading, setLoading]       = useState(true)
   const [filterSubject, setFilter]  = useState('All Subjects')
@@ -182,6 +183,22 @@ export default function PastPapersPage() {
                       <button style={{ ...s.btnView, background: 'var(--gray-400)', cursor: 'default' }} disabled>
                         PDF Coming Soon
                       </button>
+                    )}
+                    {/* Spec 4.3: link to practice mode if Paper 1 (digitised MCQ), else show PDF-only note */}
+                    {paper.paper_number === 1 ? (
+                      <button
+                        style={{ ...s.btnView, background: 'var(--green)', color: 'white', fontSize: 11 }}
+                        onClick={() => {
+                          const subj = SUBJECTS.find(s => s.name === paper.subject)
+                          if (subj) navigate(`/quiz/${subj.id}?mode=practice`)
+                        }}
+                      >
+                        📝 Attempt in Practice Mode
+                      </button>
+                    ) : (
+                      <span style={{ fontSize: 11, color: 'var(--gray-400)', alignSelf: 'center' }}>
+                        View PDF Only
+                      </span>
                     )}
                   </div>
                 </div>

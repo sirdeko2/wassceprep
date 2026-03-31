@@ -387,6 +387,7 @@ export default function QuizPage() {
             body: JSON.stringify({
               questionText: q.question_text,
               markScheme: q.mark_scheme,
+              modelAnswer: q.model_answer || null,
               studentAnswer: answer,
               maxMarks: q.marks || 20,
               subject: subjectName,
@@ -564,6 +565,7 @@ export default function QuizPage() {
                 <div style={{ fontWeight: 700, color: 'var(--blue)', fontSize: 16, marginBottom: 12 }}>AI Marking Feedback</div>
                 {Object.entries(essayResults).map(([qId, result]) => {
                   const q = essayQuestions.find(eq => eq.id === qId)
+                  const studentAns = essayAnswers[qId] || ''
                   return (
                     <div key={qId} style={{ background: 'white', borderRadius: 12, padding: 16, border: '1px solid var(--gray-200)', marginBottom: 12 }}>
                       <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--blue)', marginBottom: 8 }}>{q?.question_text?.slice(0, 80)}...</div>
@@ -586,6 +588,23 @@ export default function QuizPage() {
                       {result.feedback && (
                         <div style={{ fontSize: 13, color: 'var(--blue)', background: 'var(--blue-light)', padding: '8px 12px', borderRadius: 8, marginTop: 6 }}>
                           💡 {result.feedback}
+                        </div>
+                      )}
+                      {/* Side-by-side: student answer vs model answer (spec 3.3.2 Option B) */}
+                      {(studentAns || q?.model_answer) && (
+                        <div style={{ display: 'flex', gap: 12, marginTop: 12, flexWrap: 'wrap' }}>
+                          {studentAns && (
+                            <div style={{ flex: 1, minWidth: 200, background: 'var(--off-white)', borderRadius: 8, padding: 12 }}>
+                              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--gray-600)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Your Answer</div>
+                              <div style={{ fontSize: 13, color: 'var(--gray-800)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{studentAns}</div>
+                            </div>
+                          )}
+                          {q?.model_answer && (
+                            <div style={{ flex: 1, minWidth: 200, background: '#f0fdf4', border: '1px solid #86efac', borderRadius: 8, padding: 12 }}>
+                              <div style={{ fontSize: 11, fontWeight: 700, color: '#16a34a', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>Model Answer</div>
+                              <div style={{ fontSize: 13, color: 'var(--gray-800)', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>{q.model_answer}</div>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -623,7 +642,12 @@ export default function QuizPage() {
           </div>
           <div className="quiz-progress-wrap">
             <div className="quiz-progress-label">
-              {phase === 'essay' ? `Essay Paper ${paper?.number}: ${paper?.name}` : `Question ${current + 1} of ${questions.length}`}
+              {phase === 'essay'
+                ? `Essay Paper ${paper?.number}: ${paper?.name}`
+                : mode === 'mock'
+                  // Spec 3.6: show "X of Y answered" count in mock mode
+                  ? `${Object.keys(mcqAnswers).length} of ${questions.length} answered`
+                  : `Question ${current + 1} of ${questions.length}`}
             </div>
             {phase === 'quiz' && (
               <div className="quiz-progress-bar">

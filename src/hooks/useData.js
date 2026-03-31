@@ -42,7 +42,7 @@ export function useProgress() {
 
     supabase
       .from('quiz_sessions')
-      .select('subject, score_pct, total_questions, correct_answers, created_at')
+      .select('subject, score_pct, total_questions, correct_answers, mode, created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .then(({ data }) => {

@@ -13,7 +13,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { questionText, markScheme, studentAnswer, maxMarks, subject, paperNumber } = JSON.parse(event.body)
+    const { questionText, markScheme, modelAnswer, studentAnswer, maxMarks, subject, paperNumber } = JSON.parse(event.body)
 
     if (!studentAnswer || studentAnswer.trim().length < 20) {
       return {
@@ -41,7 +41,7 @@ ${questionText}
 
 OFFICIAL MARK SCHEME:
 ${markScheme || 'Award marks based on accuracy, completeness, and clarity of the answer.'}
-
+${modelAnswer ? `\nMODEL ANSWER (for reference when assessing completeness and depth):\n${modelAnswer}` : ''}
 STUDENT'S ANSWER:
 ${studentAnswer}
 

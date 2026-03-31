@@ -81,6 +81,16 @@ Your role:
       messages: messages.filter(m => m.role === 'user' || m.role === 'assistant'),
     })
 
+    // ── Log usage AFTER successful API call (server-side, authoritative) ──
+    if (userId) {
+      const lastUserMsg = [...messages].reverse().find(m => m.role === 'user')
+      await supabase.from('ai_tutor_usage').insert({
+        user_id: userId,
+        question_text: lastUserMsg?.content || '',
+        subject: subject || 'General',
+      })
+    }
+
     return {
       statusCode: 200,
       headers: CORS,

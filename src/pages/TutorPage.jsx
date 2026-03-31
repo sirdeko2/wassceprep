@@ -82,12 +82,7 @@ export default function TutorPage() {
         await checkUsage()
         return
       }
-
-      await supabase.from('ai_tutor_usage').insert({
-        user_id: user.id,
-        question_text: msg,
-        subject,
-      })
+      // Usage logging is handled server-side in chat.js after a successful API call
     }
 
     const userMsg = { role: 'user', content: msg }
