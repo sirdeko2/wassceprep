@@ -5,16 +5,19 @@ import { useAuth } from '@/context/AuthContext'
 export default function RegisterPage() {
   const { signUp } = useAuth()
   const navigate   = useNavigate()
-  const [form,    setForm]    = useState({ fullName: '', email: '', county: '', password: '' })
-  const [error,   setError]   = useState('')
-  const [loading, setLoading] = useState(false)
+  const [form,        setForm]        = useState({ fullName: '', email: '', county: '', password: '' })
+  const [tosAccepted, setTosAccepted] = useState(false)
+  const [error,       setError]       = useState('')
+  const [loading,     setLoading]     = useState(false)
+  const [emailSent,   setEmailSent]   = useState(false)   // show "check your email" screen
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
     if (form.password.length < 6) { setError('Password must be at least 6 characters'); return }
+    if (!tosAccepted) { setError('Please accept the Terms of Service to continue'); return }
     setLoading(true)
-    const { error } = await signUp({
+    const { data, error } = await signUp({
       email:    form.email,
       password: form.password,
       fullName: form.fullName,
@@ -22,7 +25,16 @@ export default function RegisterPage() {
     })
     setLoading(false)
     if (error) { setError(error.message); return }
-    navigate('/dashboard')
+
+    // If Supabase email confirmation is enabled, session will be null
+    // and the user must verify before they can log in.
+    if (data?.session) {
+      // Email confirmation disabled — log straight in
+      navigate('/dashboard')
+    } else {
+      // Email confirmation enabled — show "check your inbox" screen
+      setEmailSent(true)
+    }
   }
 
   const counties = [
@@ -31,6 +43,44 @@ export default function RegisterPage() {
     'Sinoe','River Cess','River Gee','Gbarpolu','Other'
   ]
 
+  // ── Email sent confirmation screen ─────────────────────────
+  if (emailSent) {
+    return (
+      <div className="auth-screen">
+        <div className="auth-panel-left">
+          <div className="auth-left-title">ALMOST <em>THERE.</em></div>
+          <p className="auth-left-desc">One more step — check your inbox to verify your email and activate your account.</p>
+        </div>
+        <div className="auth-panel-right">
+          <div className="auth-form-box" style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: 56, marginBottom: 16 }}>📧</div>
+            <div className="auth-form-title">Check your email</div>
+            <p style={{ color: '#4a5568', fontSize: 15, lineHeight: 1.7, marginBottom: 24 }}>
+              We sent a confirmation link to <strong>{form.email}</strong>.<br />
+              Click it to activate your account and start studying.
+            </p>
+            <div style={{
+              background: '#e6eaf5', borderRadius: 10, padding: '14px 18px',
+              fontSize: 13, color: '#002868', marginBottom: 24, textAlign: 'left', lineHeight: 1.6
+            }}>
+              <strong>Didn't receive it?</strong> Check your spam folder. The link expires in 24 hours.
+              If it still doesn't arrive, try registering again with the same email.
+            </div>
+            <Link to="/login" style={{
+              display: 'block', background: '#002868', color: 'white',
+              padding: '12px 0', borderRadius: 10, fontSize: 15, fontWeight: 700,
+              textDecoration: 'none', marginBottom: 12
+            }}>
+              Go to Login
+            </Link>
+            <Link to="/" style={{ color: '#8892a4', fontSize: 13 }}>← Back to Home</Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // ── Registration form ───────────────────────────────────────
   return (
     <div className="auth-screen">
       <div className="auth-panel-left">
@@ -97,6 +147,28 @@ export default function RegisterPage() {
                 required
               />
             </div>
+
+            {/* Terms of Service checkbox */}
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 20 }}>
+              <input
+                id="tos"
+                type="checkbox"
+                checked={tosAccepted}
+                onChange={e => setTosAccepted(e.target.checked)}
+                style={{ marginTop: 3, width: 16, height: 16, flexShrink: 0, cursor: 'pointer', accentColor: '#002868' }}
+              />
+              <label htmlFor="tos" style={{ fontSize: 13, color: '#4a5568', lineHeight: 1.5, cursor: 'pointer' }}>
+                I agree to the{' '}
+                <Link to="/terms" target="_blank" style={{ color: '#002868', fontWeight: 600 }}>
+                  Terms of Service
+                </Link>
+                {' '}and{' '}
+                <Link to="/terms#privacy" target="_blank" style={{ color: '#002868', fontWeight: 600 }}>
+                  Privacy Policy
+                </Link>
+              </label>
+            </div>
+
             <button className="btn-full btn-red" type="submit" disabled={loading}>
               {loading ? 'Creating account...' : 'Create Free Account'}
             </button>

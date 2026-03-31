@@ -1,8 +1,16 @@
+import { useEffect } from 'react'
 import Navbar from '@/components/layout/Navbar'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '@/context/AuthContext'
 
 export default function LandingPage() {
   const navigate = useNavigate()
+  const { user, loading } = useAuth()
+
+  // Redirect authenticated users straight to their dashboard
+  useEffect(() => {
+    if (!loading && user) navigate('/dashboard', { replace: true })
+  }, [user, loading, navigate])
 
   return (
     <div style={{ background: 'var(--white)' }}>
@@ -145,8 +153,13 @@ export default function LandingPage() {
       </section>
 
       {/* FOOTER */}
-      <footer style={{ background: 'var(--gray-800)', color: 'rgba(255,255,255,0.5)', textAlign: 'center', padding: 24, fontSize: 13 }}>
-        <p>© 2026 <span style={{ color: 'var(--gold)' }}>WASSCEPrep</span> — Free WASSCE prep for every Liberian student 🇱🇷</p>
+      <footer style={{ background: 'var(--gray-800)', color: 'rgba(255,255,255,0.5)', textAlign: 'center', padding: '28px 24px', fontSize: 13 }}>
+        <p style={{ marginBottom: 10 }}>© 2026 <span style={{ color: 'var(--gold)' }}>WASSCEPrep</span> — Free WASSCE prep for every Liberian student 🇱🇷</p>
+        <div style={{ display: 'flex', gap: 20, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link to="/terms"          style={{ color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }} onMouseEnter={e => e.target.style.color='white'} onMouseLeave={e => e.target.style.color='rgba(255,255,255,0.45)'}>Terms of Service</Link>
+          <Link to="/terms#privacy"  style={{ color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }} onMouseEnter={e => e.target.style.color='white'} onMouseLeave={e => e.target.style.color='rgba(255,255,255,0.45)'}>Privacy Policy</Link>
+          <a    href="mailto:support@wassceprep.com" style={{ color: 'rgba(255,255,255,0.45)', textDecoration: 'none' }} onMouseEnter={e => e.target.style.color='white'} onMouseLeave={e => e.target.style.color='rgba(255,255,255,0.45)'}>Contact Us</a>
+        </div>
       </footer>
     </div>
   )

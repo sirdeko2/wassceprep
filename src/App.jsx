@@ -16,6 +16,7 @@ import PaymentPage       from '@/pages/PaymentPage'
 import AdminPage         from '@/pages/AdminPage'
 import ResetPasswordPage from '@/pages/ResetPasswordPage'
 import NotFoundPage      from '@/pages/NotFoundPage'
+import TermsPage         from '@/pages/TermsPage'
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -53,6 +54,7 @@ export default function App() {
         <Route path="/tutor"          element={<PrivateRoute><TutorPage /></PrivateRoute>} />
         <Route path="/progress"       element={<PrivateRoute><ProgressPage /></PrivateRoute>} />
         <Route path="/admin"          element={<PrivateRoute><AdminPage /></PrivateRoute>} />
+        <Route path="/terms"          element={<TermsPage />} />
         <Route path="*"               element={<NotFoundPage />} />
       </Routes>
     </>
