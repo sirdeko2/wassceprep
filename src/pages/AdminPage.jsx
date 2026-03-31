@@ -432,7 +432,14 @@ export default function AdminPage() {
   }
 
   if (!user) return <div style={{ padding: 40, textAlign: 'center' }}>Loading...</div>
-  if (user.email !== ADMIN_EMAIL) return null
+  if (user.email !== ADMIN_EMAIL) return (
+    <div style={{ padding: 60, textAlign: 'center' }}>
+      <div style={{ fontSize: 48, marginBottom: 16 }}>🔒</div>
+      <div style={{ fontSize: 20, fontWeight: 700, color: '#1a202c', marginBottom: 8 }}>Admin Access Only</div>
+      <div style={{ fontSize: 14, color: '#4a5568', marginBottom: 24 }}>You are logged in as <strong>{user.email}</strong>.<br />This page requires the admin account.</div>
+      <button onClick={() => navigate('/dashboard')} style={{ background: '#002868', color: 'white', border: 'none', padding: '10px 24px', borderRadius: 8, fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" }}>← Back to Dashboard</button>
+    </div>
+  )
 
   const TABS = [
     { id: 'questions', label: '📋 All Questions' },

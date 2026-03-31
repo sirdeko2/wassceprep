@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/context/AuthContext'
 
+const ADMIN_EMAIL = 'sirdeko2@gmail.com'
+
 export function useSubscription() {
   const { user } = useAuth()
   const [subscription, setSub] = useState(null)
@@ -9,6 +11,14 @@ export function useSubscription() {
 
   useEffect(() => {
     if (!user) { setLoading(false); return }
+
+    // Admin always has full access — no subscription row needed
+    if (user.email === ADMIN_EMAIL) {
+      setSub({ plan: 'paid', status: 'active' })
+      setLoading(false)
+      return
+    }
+
     supabase
       .from('subscriptions')
       .select('*')
